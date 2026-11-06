@@ -15,7 +15,7 @@ import fonts from "./fonts.json";
 // ---------------------------------------------------------------------------
 // Palette (beige)
 // ---------------------------------------------------------------------------
-const C = {
+export const C = {
   skyTop: "#F4EADB",
   skyBottom: "#E7D5B6",
   skyTopDark: "#CDBB9F",
@@ -33,15 +33,15 @@ const C = {
   goldSoft: "#E6C27A",
 };
 
-const W = 1080;
-const H = 1920;
-const HORIZON = 1150;
-const FIG_X = 540;
+export const W = 1080;
+export const H = 1920;
+export const HORIZON = 1150;
+export const FIG_X = 540;
 
 // ---------------------------------------------------------------------------
 // Fonts (self-hosted copies of Google Fonts: PT Serif, Manrope, Amiri for ﷺ)
 // ---------------------------------------------------------------------------
-const FontFaces: React.FC = () => {
+export const FontFaces: React.FC = () => {
   const css = (fonts as Array<Record<string, string>>)
     .map(
       (f) =>
@@ -53,16 +53,16 @@ const FontFaces: React.FC = () => {
   return <style>{css}</style>;
 };
 
-const SERIF = "'PT Serif', 'Amiri', serif";
-const SANS = "'Manrope', 'Inter', sans-serif";
+export const SERIF = "'PT Serif', 'Amiri', serif";
+export const SANS = "'Manrope', 'Inter', sans-serif";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-type Key<T> = [number, T];
-const ease = Easing.bezier(0.45, 0, 0.25, 1);
+export type Key<T> = [number, T];
+export const ease = Easing.bezier(0.45, 0, 0.25, 1);
 
-function keyed(frame: number, keys: Key<number>[]): number {
+export function keyed(frame: number, keys: Key<number>[]): number {
   return interpolate(
     frame,
     keys.map((k) => k[0]),
@@ -72,7 +72,7 @@ function keyed(frame: number, keys: Key<number>[]): number {
 }
 
 type P = [number, number];
-type Pose = Record<
+export type Pose = Record<
   | "head"
   | "neck"
   | "hip"
@@ -87,7 +87,7 @@ type Pose = Record<
   P
 >;
 
-const STAND: Pose = {
+export const STAND: Pose = {
   head: [0, -338],
   neck: [0, -290],
   hip: [0, -165],
@@ -100,7 +100,7 @@ const STAND: Pose = {
   rKnee: [20, -84],
   rFoot: [28, 0],
 };
-const OPEN: Pose = {
+export const OPEN: Pose = {
   ...STAND,
   head: [0, -342],
   lElbow: [-70, -320],
@@ -108,7 +108,7 @@ const OPEN: Pose = {
   rElbow: [70, -320],
   rHand: [110, -385],
 };
-const DUA: Pose = {
+export const DUA: Pose = {
   ...STAND,
   head: [0, -334],
   lElbow: [-62, -232],
@@ -116,7 +116,7 @@ const DUA: Pose = {
   rElbow: [62, -232],
   rHand: [52, -300],
 };
-const CARRY: Pose = {
+export const CARRY: Pose = {
   ...STAND,
   head: [0, -334],
   lElbow: [-62, -330],
@@ -124,7 +124,7 @@ const CARRY: Pose = {
   rElbow: [62, -330],
   rHand: [44, -400],
 };
-const STRAIN: Pose = {
+export const STRAIN: Pose = {
   head: [6, -296],
   neck: [4, -252],
   hip: [0, -132],
@@ -154,11 +154,11 @@ const POSE_KEYS: Key<Pose>[] = [
   [800, DUA],
 ];
 
-function poseAt(frame: number): Pose {
+export function poseAt(frame: number, keys: Key<Pose>[] = POSE_KEYS): Pose {
   let i = 0;
-  while (i < POSE_KEYS.length - 2 && frame > POSE_KEYS[i + 1][0]) i++;
-  const [f0, a] = POSE_KEYS[i];
-  const [f1, b] = POSE_KEYS[i + 1];
+  while (i < keys.length - 2 && frame > keys[i + 1][0]) i++;
+  const [f0, a] = keys[i];
+  const [f1, b] = keys[i + 1];
   const t = ease(Math.min(1, Math.max(0, (frame - f0) / (f1 - f0))));
   const out = {} as Pose;
   (Object.keys(a) as (keyof Pose)[]).forEach((k) => {
@@ -175,7 +175,7 @@ function poseAt(frame: number): Pose {
 // ---------------------------------------------------------------------------
 // Figure
 // ---------------------------------------------------------------------------
-const Figure: React.FC<{ pose: Pose; x: number; y: number; opacity?: number }> = ({
+export const Figure: React.FC<{ pose: Pose; x: number; y: number; opacity?: number }> = ({
   pose,
   x,
   y,
@@ -205,7 +205,7 @@ const Figure: React.FC<{ pose: Pose; x: number; y: number; opacity?: number }> =
 // ---------------------------------------------------------------------------
 // Plaque
 // ---------------------------------------------------------------------------
-const Plaque: React.FC<{
+export const Plaque: React.FC<{
   label: string;
   cx: number;
   cy: number;
@@ -396,7 +396,7 @@ export const Hadith: React.FC = () => {
       <FontFaces />
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute" }}>
         <defs>
-          <linearGradient id="limbGrad" x1="0" y1="0" x2="1" y2="1">
+          <linearGradient id="limbGrad" gradientUnits="userSpaceOnUse" x1="-90" y1="-420" x2="90" y2="0">
             <stop offset="0" stopColor={C.figureLight} />
             <stop offset="1" stopColor={C.figure} />
           </linearGradient>
